@@ -109,6 +109,8 @@ let rectSum = rect + rect2
 // Izmjeniti cir2, squ2 i rect2, te ponovno odraditi operacije
 // sabiranja i ispisivanja na ekran
 
+cir2.Radius <- 4
+let sum = cir + cir2
 
 // Za svaki oblik napraviti staticki clan koji ce brojati
 // broj instanci pojedinog oblika

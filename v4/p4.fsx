@@ -8,7 +8,7 @@
 
 type Trie =
   | Empty
-  | Node of letter:char * connections:list<Trie> * wordsEnding:int
+  | Node of letter:char * connections:list<Trie> * wordEnding:bool
   | Root of connections:list<Trie>
 let rec insertWord (word:string) (tr:Trie) : Trie =
   match word with
@@ -17,52 +17,131 @@ let rec insertWord (word:string) (tr:Trie) : Trie =
     match tr with
     | Empty -> 
       Node (word[0], List.init 26 
-        (fun num -> if (word.Length=1 || num=(int word[1] - 97)) then
-                           (insertWord word[1..] tr) else Empty), if word.Length=1 then 1 else 0)
-    | Node (l, conns, wE) -> 
-      Node (l, List.init 26 
-              (fun num -> if (word.Length=1 || num=(int word[1] - 97)) then
-                                insertWord word[1..] conns[int word[0] - 97] 
-                                else conns[num]), if word.Length = 1 then wE+1 else wE)
+        (fun num -> if (word.Length>1 && num=(int word[1] - 97)) then
+                           (insertWord word[1..] tr) else Empty), word.Length=1)
+    | Node (l, conns, _) -> 
+      Node (l, List.mapi 
+              (fun num t  -> if (word.Length>1 && num=(int word[1] - 97)) then
+                                insertWord word[1..] t else t) conns,
+                                word.Length = 1)
     | Root conns -> 
       Root (List.init 26 
               (fun num -> if num=(int word[0] - 97) then
                                 (insertWord word conns[int word[0] - 97]) else conns[num]))
 let rec findStrings (w:string) (tr:Trie) : List<string> =
-  let rec search (word:string) (t:Trie) : List<string> =
-    match word with
-    | "" ->
-      match tr with
-      | Empty -> []
-      | Node (l, conns) ->
-        let acc = [];
-        List.iter (fun c -> List.append acc (search "" c)) conns
-        let rec iter (c:List<Trie>) (acc:list<string>) : List<string> =
-          match c with
-          | [] -> acc
-          | _ ->
-            let newAcc = List.append acc (search "" c[0])
-            iter c[1..] newAcc 
-        let x = iter conns []
-        List.init x.Length (fun num -> (string l) + x[num])
-      | Root (conns) ->
-        let rec iter (c:List<Trie>) (acc:list<string>) : List<string> =
-          match c with
-          | [] -> acc
-          | _ ->
-            let newAcc = List.append acc (search "" c[0])
-            iter c[1..] newAcc
-        iter conns []
-    | _ ->
-      match t with
-      | Empty -> []
-      | Node (l, conns) -> 
-        (if word.Length > 1 then 
-          let x = (search word[1..] conns[int word[1] - 97])
-          List.init x.Length (fun num -> (string l) + string x[num])
-        else search "" t)
-      | Root (conns) -> 
-        let x = search word conns[int word[0] - 97]
-        List.init x.Length (fun num -> x[num])
-  search w tr
-let x = insertWord "hello" (Root (List.init 26 (fun _ -> Empty)))
+  match w with
+  | "" -> 
+    match tr with
+    | Empty -> []
+    | Node (ch, conn, wE) ->
+      List.map (fun s -> if wE then s else string ch + s)
+        (List.append (if wE then [string ch] else [])
+        (List.collect (fun c -> (findStrings "" c)) conn))
+    | Root conn -> List.collect (fun c -> (findStrings "" c)) conn
+  | _ ->
+    match tr with
+    | Empty -> []
+    | Node (ch, conn, _) -> 
+      findStrings w[1..] conn[int w[0] - 97]
+    | Root (conn) -> List.map (fun (s:string) -> w + s[1..]) (findStrings w[1..] conn[int w[0] - 97])
+    
+
+let cppkeyword = (Root (List.replicate 26  Empty)) |> 
+                  insertWord "alignas" |>
+                  insertWord "alignof" |>
+                  insertWord "an" |>
+                  insertWord "ande" |>
+                  insertWord "as" |>
+                  insertWord "atomiccancel" |>
+                  insertWord "atomiccommit" |>
+                  insertWord "atomicnoexcept" |>
+                  insertWord "auto" |>
+                  insertWord "bitan" |>
+                  insertWord "bito" |>
+                  insertWord "boo" |>
+                  insertWord "brea" |>
+                  insertWord "cas" |>
+                  insertWord "catc" |>
+                  insertWord "cha" |>
+                  insertWord "char8t" |>
+                  insertWord "char16t" |>
+                  insertWord "char32t" |>
+                  insertWord "class" |>
+                  insertWord "comp" |>
+                  insertWord "concept" |>
+                  insertWord "cons" |>
+                  insertWord "consteval" |>
+                  insertWord "constexpr" |>
+                  insertWord "constinit" |>
+                  insertWord "constcas" |>
+                  insertWord "continu" |>
+                  insertWord "coawait" |>
+                  insertWord "coreturn" |>
+                  insertWord "coyield" |>
+                  insertWord "decltype" |>
+                  insertWord "default" |>
+                  insertWord "delete" |>
+                  insertWord "do" |>
+                  insertWord "double" |>
+                  insertWord "dynamiccast" |>
+                  insertWord "else" |>
+                  insertWord "enum" |>
+                  insertWord "explicit" |>
+                  insertWord "export" |>
+                  insertWord "extern" |>
+                  insertWord "false" |>
+                  insertWord "float" |>
+                  insertWord "for" |>
+                  insertWord "friend" |>
+                  insertWord "goto" |>
+                  insertWord "if" |>
+                  insertWord "inline" |>
+                  insertWord "int" |>
+                  insertWord "long" |>
+                  insertWord "mutable" |>
+                  insertWord "namespace" |>
+                  insertWord "new" |>
+                  insertWord "noexcept" |>
+                  insertWord "not" |>
+                  insertWord "noteq" |>
+                  insertWord "nullptr" |>
+                  insertWord "operator" |>
+                  insertWord "or" |>
+                  insertWord "oreq" |>
+                  insertWord "private" |>
+                  insertWord "protected" |>
+                  insertWord "public" |>
+                  insertWord "reflexpr" |>
+                  insertWord "register" |>
+                  insertWord "reinterpretcast" |>
+                  insertWord "requires" |>
+                  insertWord "return" |>
+                  insertWord "short" |>
+                  insertWord "signed" |>
+                  insertWord "sizeof" |>
+                  insertWord "static" |>
+                  insertWord "staticassert" |>
+                  insertWord "staticcast" |>
+                  insertWord "struct" |>
+                  insertWord "switch" |>
+                  insertWord "synchronized" |>
+                  insertWord "template" |>
+                  insertWord "this" |>
+                  insertWord "threadlocal" |>
+                  insertWord "throw" |>
+                  insertWord "true" |>
+                  insertWord "try" |>
+                  insertWord "typedef" |>
+                  insertWord "typeid" |>
+                  insertWord "typename" |>
+                  insertWord "union" |>
+                  insertWord "unsigned" |>
+                  insertWord "using" |>
+                  insertWord "virtual" |>
+                  insertWord "void" |>
+                  insertWord "volatile" |>
+                  insertWord "wchart" |>
+                  insertWord "while" |>
+                  insertWord "xor" |>
+                  insertWord "xoreq"
+let res = findStrings "s" cppkeyword
