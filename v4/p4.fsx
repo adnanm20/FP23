@@ -58,23 +58,23 @@ let cppkeyword = (Root (List.replicate 26  Empty)) |>
                   insertWord "auto" |>
                   insertWord "bitan" |>
                   insertWord "bito" |>
-                  insertWord "boo" |>
-                  insertWord "brea" |>
-                  insertWord "cas" |>
-                  insertWord "catc" |>
-                  insertWord "cha" |>
+                  insertWord "bool" |>
+                  insertWord "break" |>
+                  insertWord "cast" |>
+                  insertWord "catch" |>
+                  insertWord "char" |>
                   insertWord "char8t" |>
                   insertWord "char16t" |>
                   insertWord "char32t" |>
                   insertWord "class" |>
                   insertWord "comp" |>
                   insertWord "concept" |>
-                  insertWord "cons" |>
+                  insertWord "const" |>
                   insertWord "consteval" |>
                   insertWord "constexpr" |>
                   insertWord "constinit" |>
-                  insertWord "constcas" |>
-                  insertWord "continu" |>
+                  insertWord "constcast" |>
+                  insertWord "continue" |>
                   insertWord "coawait" |>
                   insertWord "coreturn" |>
                   insertWord "coyield" |>
@@ -144,4 +144,4 @@ let cppkeyword = (Root (List.replicate 26  Empty)) |>
                   insertWord "while" |>
                   insertWord "xor" |>
                   insertWord "xoreq"
-let res = findStrings "s" cppkeyword
+let res = findStrings "a" cppkeyword
