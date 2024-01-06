@@ -1,0 +1,60 @@
+*, html, body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(63, 71, 108);
+  font-size: large;
+  padding: 16px;
+}
+
+#app > div {
+  border: 2px solid black;
+  border-radius: 8px;
+  max-width: fit-content;
+  padding: 8px;
+  background-color: rgb(156, 97, 97);
+}
+
+#app > div > :nth-child(2) {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 16px;
+}
+
+#app h1 {
+  text-align: right;
+  min-height: 80px;
+}
+
+#app button {
+  border: none;
+  width: 60px;
+  font-size: 30px;
+  text-align: center;
+}
+
+#app button:hover {
+  cursor: pointer;
+  outline: 2px solid red;
+}
+
+.number {
+  background-color: rgb(205, 205, 158);
+}
+
+.operator {
+  background-color: rgb(98, 109, 88);
+}
+
+.clear {
+  background-color: rgb(118, 74, 118);
+}
+
+.equals {
+  background-color: rgb(118, 74, 118);
+}
